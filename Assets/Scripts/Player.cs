@@ -6,12 +6,14 @@ public class Player : MonoBehaviour
 {
 	public GameObject bullet;
 	private Rigidbody2D myBody;
+	private Animator legAnim;
     public float speed;
     private Vector2 moveVelocity;
 
     private void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
+        legAnim = transform.GetChild(2).GetComponent<Animator>();
     }
     private void Update()
     {
@@ -21,6 +23,8 @@ public class Player : MonoBehaviour
     	{
     		Instantiate(bullet, transform.position, Quaternion.identity);
     	}
+    	//Bo goc
+    	transform.position = new Vector2(Mathf.Clamp(transform.position.x, -5.32f , 5.32f),Mathf.Clamp(transform.position.y, -2.7f , 2.7f));
     }
      void FixedUpdate()
     {
@@ -38,5 +42,12 @@ public class Player : MonoBehaviour
         Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         moveVelocity = moveInput.normalized * speed;
         myBody.MovePosition(myBody.position + moveVelocity * Time.fixedDeltaTime);
+        if(moveVelocity == Vector2.zero)
+        {
+        	legAnim.SetBool("Moving", false);
+        }
+        else {
+        	legAnim.SetBool("Moving",true);
+        }
     }
 }
